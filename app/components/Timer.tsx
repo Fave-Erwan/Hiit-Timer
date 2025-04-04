@@ -44,7 +44,8 @@ export default function Timer({ workTime, restTime, rounds, onStateChange, theme
     } else if (timeLeft === 0) {
 
       if (sound) {
-      sound.currentTime = 0.20;
+      sound.load();
+      sound.currentTime= 2;
       sound.play();
       }
 
