@@ -17,12 +17,17 @@ export default function Timer({ workTime, restTime, rounds, onStateChange, theme
   const [isRunning, setIsRunning] = useState(false);
   const [showZero, setShowZero] = useState(false);
 
+  const [sound, setSound] = useState<HTMLAudioElement>();
+
   // Effet pour mettre à jour le temps restant quand workTime ou restTime changent
   useEffect(() => {
     if (!isRunning) {
       setTimeLeft(isWorking ? workTime : restTime);
       setShowZero(false);
     }
+    const audio = new Audio('/sounds/timer-end.mp3');
+    setSound(audio);
+
   }, [workTime, restTime, isWorking, isRunning]);
 
   useEffect(() => {
@@ -37,10 +42,19 @@ export default function Timer({ workTime, restTime, rounds, onStateChange, theme
         setTimeLeft((prev) => prev - 1);
       }, 1000);
     } else if (timeLeft === 0) {
+
+      if (sound) {
+      sound.currentTime = 0.20;
+      sound.play();
+      }
+
       // Afficher 00:00 pendant une seconde avant de passer à la phase suivante
       setShowZero(true);
       
       setTimeout(() => {
+        if (sound) {
+        sound.pause();
+        }
         if (isWorking) {
           setTimeLeft(restTime);
           setIsWorking(false);
